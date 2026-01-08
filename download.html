@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Download Portal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            min-height: 100vh;
+            color: #e2e8f0;
+        }
+
+        header {
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        header h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #f1f5f9;
+        }
+
+        header h1 svg {
+            color: #3b82f6;
+        }
+
+        main {
+            padding: 2rem 0;
+        }
+
+        .section {
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(148, 163, 184, 0.1);
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-header {
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .section-header.amber {
+            border-left: 4px solid #f59e0b;
+            background: rgba(245, 158, 11, 0.05);
+        }
+
+        .section-header.amber svg {
+            color: #f59e0b;
+        }
+
+        .section-header.emerald {
+            border-left: 4px solid #10b981;
+            background: rgba(16, 185, 129, 0.05);
+        }
+
+        .section-header.emerald svg {
+            color: #10b981;
+        }
+
+        .files-list {
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 1.25rem;
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid rgba(148, 163, 184, 0.1);
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .file-item:hover {
+            background: rgba(59, 130, 246, 0.1);
+            border-color: rgba(59, 130, 246, 0.3);
+        }
+
+        .file-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .file-info svg {
+            color: #94a3b8;
+        }
+
+        .file-name {
+            font-weight: 500;
+            color: #f1f5f9;
+        }
+
+        .file-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .download-count {
+            font-size: 0.875rem;
+            color: #64748b;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .download-count span {
+            color: #3b82f6;
+            font-weight: 600;
+        }
+
+        .download-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 0.875rem;
+            transition: all 0.2s ease;
+        }
+
+        .download-btn:hover {
+            background: #2563eb;
+            transform: translateY(-1px);
+        }
+
+        .download-btn:active {
+            transform: translateY(0);
+        }
+
+        .download-btn.emerald {
+            background: #10b981;
+        }
+
+        .download-btn.emerald:hover {
+            background: #059669;
+        }
+
+        footer {
+            border-top: 1px solid rgba(148, 163, 184, 0.1);
+            padding: 1.5rem 0;
+            text-align: center;
+            color: #64748b;
+            font-size: 0.875rem;
+            margin-top: auto;
+        }
+
+        .status-badge {
+            position: fixed;
+            bottom: 1rem;
+            right: 1rem;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            z-index: 1000;
+        }
+
+        .status-badge.connected {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .status-badge.disconnected {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        /* Direct download sayfasi icin yeni stiller */
+        .direct-download-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 60vh;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .direct-download-container h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #f1f5f9;
+        }
+
+        .direct-download-container p {
+            color: #94a3b8;
+            margin-bottom: 2rem;
+        }
+
+        .direct-download-container .download-btn {
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+        }
+
+        .download-status {
+            margin-top: 1rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-size: 0.875rem;
+        }
+
+        .download-status.success {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .download-status.error {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        @media (max-width: 640px) {
+            .file-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .file-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+                File Download Portal
+            </h1>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- URL parametresi varsa sadece o dosyayi goster, yoksa tum listeyi goster -->
+        <div id="direct-download-section" style="display: none;">
+            <div class="direct-download-container">
+                <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+                <h2 id="direct-file-name">Dosya Indirme</h2>
+                <p>Indirme sayisi: <span id="direct-download-count" style="color: #3b82f6; font-weight: 600;">0</span></p>
+                <button id="direct-download-btn" class="download-btn emerald" onclick="directDownload()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+                    Dosyayi Indir
+                </button>
+                <div id="download-status" class="download-status" style="display: none;"></div>
+            </div>
+        </div>
+
+        <!-- Tum dosya listesi (URL parametresi yoksa gosterilir) -->
+        <div id="file-list-section">
+            <!-- Batch & Text Files -->
+            <div class="section">
+                <div class="section-header amber">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
+                    Batch & Text Files
+                </div>
+                <div class="files-list">
+                    <!-- link.txt -->
+                    <div class="file-item">
+                        <div class="file-info">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
+                            <span class="file-name">link.txt</span>
+                        </div>
+                        <div class="file-actions">
+                            <div class="download-count">
+                                <span id="count-link.txt">0</span> indirme
+                            </div>
+                            <button class="download-btn" onclick="downloadFile('link.txt', 'files/link.txt')">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+                                Indir
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- link2.txt -->
+                    <div class="file-item">
+                        <div class="file-info">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
+                            <span class="file-name">link2.txt</span>
+                        </div>
+                        <div class="file-actions">
+                            <div class="download-count">
+                                <span id="count-link2.txt">0</span> indirme
+                            </div>
+                            <button class="download-btn" onclick="downloadFile('link2.txt', 'files/link2.txt')">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+                                Indir
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- link3.txt -->
+                    <div class="file-item">
+                        <div class="file-info">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
+                            <span class="file-name">link3.txt</span>
+                        </div>
+                        <div class="file-actions">
+                            <div class="download-count">
+                                <span id="count-link3.txt">0</span> indirme
+                            </div>
+                            <button class="download-btn" onclick="downloadFile('link3.txt', 'files/link3.txt')">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+                                Indir
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- link4.txt -->
+                    <div class="file-item">
+                        <div class="file-info">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
+                            <span class="file-name">link4.txt</span>
+                        </div>
+                        <div class="file-actions">
+                            <div class="download-count">
+                                <span id="count-link4.txt">0</span> indirme
+                            </div>
+                            <button class="download-btn" onclick="downloadFile('link4.txt', 'files/link4.txt')">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+                                Indir
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ZIP Files -->
+            <div class="section">
+                <div class="section-header emerald">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+                    ZIP Files
+                </div>
+                <div class="files-list">
+                    <!-- comment.zip -->
+                    <div class="file-item">
+                        <div class="file-info">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+                            <span class="file-name">comment.zip</span>
+                        </div>
+                        <div class="file-actions">
+                            <div class="download-count">
+                                <span id="count-comment.zip">0</span> indirme
+                            </div>
+                            <button class="download-btn emerald" onclick="downloadFile('comment.zip', 'files/comment.zip')">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+                                Indir
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- comnent.zip -->
+                    <div class="file-item">
+                        <div class="file-info">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+                            <span class="file-name">comnent.zip</span>
+                        </div>
+                        <div class="file-actions">
+                            <div class="download-count">
+                                <span id="count-comnent.zip">0</span> indirme
+                            </div>
+                            <button class="download-btn emerald" onclick="downloadFile('comnent.zip', 'files/comnent.zip')">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+                                Indir
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            File Download Portal
+        </div>
+    </footer>
+
+    <!-- Supabase Connection Status -->
+    <div id="status-badge" class="status-badge disconnected">Baglaniyor...</div>
+
+    <!-- Supabase JS SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <script>
+        // =====================================================
+        // SUPABASE AYARLARI
+        // =====================================================
+        const SUPABASE_URL = 'https://detjrfbjdnozpimohyvd.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRldGpyZmJqZG5venBpbW9oeXZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc4MDY0ODksImV4cCI6MjA4MzM4MjQ4OX0.wolH7joIplHu9-uNq5h2xQA-anJFjbbux1QjsN-HCoc';
+        
+        const FILE_BASE_PATH = 'files/'; // Dosyalarin bulundugu klasor
+        // =====================================================
+        
+        let supabaseClient = null;
+        const statusBadge = document.getElementById('status-badge');
+        
+        let directFileName = null;
+        const urlParams = new URLSearchParams(window.location.search);
+        const fileParam = urlParams.get('file');
+        
+        // Supabase'i baslat
+        async function initSupabase() {
+            try {
+                supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                
+                // Baglanti testi yap
+                const { data, error } = await supabaseClient
+                    .from('download_counts')
+                    .select('count')
+                    .limit(1);
+                
+                if (error) throw error;
+                
+                statusBadge.textContent = 'Supabase Bagli';
+                statusBadge.className = 'status-badge connected';
+                
+                if (fileParam) {
+                    directFileName = fileParam;
+                    showDirectDownloadMode();
+                    await loadSingleFileCount(fileParam);
+                } else {
+                    // Tum sayilari yukle
+                    await loadDownloadCounts();
+                }
+                
+            } catch (err) {
+                console.error('Supabase baglantisi kurulamadi:', err);
+                statusBadge.textContent = 'Baglanti Hatasi: ' + err.message;
+                statusBadge.className = 'status-badge disconnected';
+            }
+        }
+
+        function showDirectDownloadMode() {
+            document.getElementById('file-list-section').style.display = 'none';
+            document.getElementById('direct-download-section').style.display = 'block';
+            document.getElementById('direct-file-name').textContent = directFileName;
+            document.title = directFileName + ' - Indir';
+        }
+
+        async function loadSingleFileCount(fileName) {
+            if (!supabaseClient) return;
+            
+            try {
+                const { data, error } = await supabaseClient
+                    .from('download_counts')
+                    .select('count')
+                    .eq('file_name', fileName)
+                    .single();
+                
+                if (error && error.code !== 'PGRST116') throw error;
+                
+                const count = data ? data.count : 0;
+                document.getElementById('direct-download-count').textContent = count;
+            } catch (err) {
+                console.error('Sayi yuklenemedi:', err);
+            }
+        }
+
+        // Sayfa yuklendiginde sayilari cek
+        async function loadDownloadCounts() {
+            if (!supabaseClient) return;
+            
+            try {
+                const { data, error } = await supabaseClient
+                    .from('download_counts')
+                    .select('file_name, count');
+                
+                if (error) throw error;
+                
+                if (data) {
+                    data.forEach(item => {
+                        const el = document.getElementById('count-' + item.file_name);
+                        if (el) el.textContent = item.count || 0;
+                    });
+                }
+            } catch (err) {
+                console.error('Sayilar yuklenemedi:', err);
+            }
+        }
+
+        // Indirme sayisini artir
+        async function incrementDownload(fileName) {
+            if (!supabaseClient) return 0;
+            
+            try {
+                // Mevcut kaydi kontrol et
+                const { data: existing, error: selectError } = await supabaseClient
+                    .from('download_counts')
+                    .select('id, count')
+                    .eq('file_name', fileName)
+                    .single();
+
+                if (selectError && selectError.code !== 'PGRST116') {
+                    throw selectError;
+                }
+
+                let newCount = 1;
+
+                if (existing) {
+                    // Guncelle
+                    newCount = (existing.count || 0) + 1;
+                    const { error: updateError } = await supabaseClient
+                        .from('download_counts')
+                        .update({ 
+                            count: newCount, 
+                            updated_at: new Date().toISOString() 
+                        })
+                        .eq('id', existing.id);
+                    
+                    if (updateError) throw updateError;
+                } else {
+                    // Yeni kayit ekle
+                    const { error: insertError } = await supabaseClient
+                        .from('download_counts')
+                        .insert({ 
+                            file_name: fileName, 
+                            count: 1,
+                            created_at: new Date().toISOString(),
+                            updated_at: new Date().toISOString()
+                        });
+                    
+                    if (insertError) throw insertError;
+                }
+
+                return newCount;
+            } catch (err) {
+                console.error('Sayac guncellenemedi:', err);
+                return 0;
+            }
+        }
+
+        async function directDownload() {
+            if (!directFileName) return;
+            
+            const statusDiv = document.getElementById('download-status');
+            const btn = document.getElementById('direct-download-btn');
+            
+            btn.disabled = true;
+            btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="animate-spin"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> Indiriliyor...';
+            
+            // Sayaci artir
+            const newCount = await incrementDownload(directFileName);
+            document.getElementById('direct-download-count').textContent = newCount;
+            
+            // Dosyayi indir
+            const filePath = FILE_BASE_PATH + directFileName;
+            const link = document.createElement('a');
+            link.href = filePath;
+            link.download = directFileName;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            // Basari mesaji
+            statusDiv.textContent = 'Dosya basariyla indirildi!';
+            statusDiv.className = 'download-status success';
+            statusDiv.style.display = 'block';
+            
+            btn.disabled = false;
+            btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg> Tekrar Indir';
+        }
+
+        // Dosya indirme fonksiyonu (liste icin)
+        async function downloadFile(fileName, filePath) {
+            // Once sayaci artir
+            const newCount = await incrementDownload(fileName);
+            
+            // UI'yi guncelle
+            const el = document.getElementById('count-' + fileName);
+            if (el) el.textContent = newCount;
+            
+            // Dosyayi indir
+            const link = document.createElement('a');
+            link.href = filePath;
+            link.download = fileName;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // Sayfa yuklendiginde baslat
+        document.addEventListener('DOMContentLoaded', initSupabase);
+    </script>
+</body>
+</html>
