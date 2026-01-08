@@ -247,23 +247,25 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
     <script>
-        // Supabase bağlantısı - BUNLARI KENDİ BİLGİLERİNLE DEĞİŞTİR
+        // Supabase bağlantısı
         const SUPABASE_URL = 'https://detjrfbjdnozpimohyvd.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRldGpyZmJqZG5venBpbW9oeXZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDY2NTU4NTAsImV4cCI6MjA2MjIzMTg1MH0.5c7lUFe7WELVAsJjM8w8_qtLRuAQZGOJpJEcOdvT4Dk';
         
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // Dosya listesi
+        const BASE_PATH = '/viskii';
+
+        // Dosya listesi - tam yollar ile
         const textFiles = [
-            { name: 'link.txt', href: 'files/link.txt' },
-            { name: 'link2.txt', href: 'files/link2.txt' },
-            { name: 'link3.txt', href: 'files/link3.txt' },
-            { name: 'link4.txt', href: 'files/link4.txt' },
+            { name: 'link.txt', href: `${BASE_PATH}/files/link.txt` },
+            { name: 'link2.txt', href: `${BASE_PATH}/files/link2.txt` },
+            { name: 'link3.txt', href: `${BASE_PATH}/files/link3.txt` },
+            { name: 'link4.txt', href: `${BASE_PATH}/files/link4.txt` },
         ];
 
         const zipFiles = [
-            { name: 'comment.zip', href: 'files/comment.zip' },
-            { name: 'comnent.zip', href: 'files/comnent.zip' },
+            { name: 'comment.zip', href: `${BASE_PATH}/files/comment.zip` },
+            { name: 'comnent.zip', href: `${BASE_PATH}/files/comnent.zip` },
         ];
 
         // İndirme sayılarını tutan obje
