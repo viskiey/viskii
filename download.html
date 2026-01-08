@@ -18,6 +18,14 @@
             color: #e2e8f0;
         }
 
+        /* Direkt indirme modu icin gizli body */
+        body.direct-mode {
+            background: transparent;
+        }
+        body.direct-mode * {
+            display: none !important;
+        }
+
         header {
             background: rgba(30, 41, 59, 0.8);
             backdrop-filter: blur(10px);
@@ -210,51 +218,6 @@
             border: 1px solid rgba(239, 68, 68, 0.3);
         }
 
-        .direct-download-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 60vh;
-            text-align: center;
-            padding: 2rem;
-        }
-
-        .direct-download-container h2 {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-            color: #f1f5f9;
-        }
-
-        .direct-download-container p {
-            color: #94a3b8;
-            margin-bottom: 2rem;
-        }
-
-        .direct-download-container .download-btn {
-            padding: 1rem 2rem;
-            font-size: 1.1rem;
-        }
-
-        .download-status {
-            margin-top: 1rem;
-            padding: 0.75rem 1.5rem;
-            border-radius: 8px;
-            font-size: 0.875rem;
-        }
-
-        .download-status.success {
-            background: rgba(16, 185, 129, 0.2);
-            color: #10b981;
-            border: 1px solid rgba(16, 185, 129, 0.3);
-        }
-
-        .download-status.error {
-            background: rgba(239, 68, 68, 0.2);
-            color: #ef4444;
-            border: 1px solid rgba(239, 68, 68, 0.3);
-        }
-
         @media (max-width: 640px) {
             .file-item {
                 flex-direction: column;
@@ -280,21 +243,6 @@
     </header>
 
     <main class="container">
-        <!-- URL parametresi varsa sadece o dosyayi goster -->
-        <div id="direct-download-section" style="display: none;">
-            <div class="direct-download-container">
-                <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
-                <h2 id="direct-file-name">Dosya Indirme</h2>
-                <p>Indirme sayisi: <span id="direct-download-count" style="color: #3b82f6; font-weight: 600;">0</span></p>
-                <a id="direct-download-btn" class="download-btn emerald" href="#" onclick="directDownload(event)">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
-                    Tekrar Indir
-                </a>
-                <div id="download-status" class="download-status" style="display: none;"></div>
-            </div>
-        </div>
-
-        <!-- Tum dosya listesi -->
         <div id="file-list-section">
             <!-- Batch & Text Files -->
             <div class="section">
@@ -443,9 +391,12 @@
         let supabaseClient = null;
         const statusBadge = document.getElementById('status-badge');
         
-        let directFileName = null;
         const urlParams = new URLSearchParams(window.location.search);
         const fileParam = urlParams.get('file');
+        
+        if (fileParam) {
+            document.body.classList.add('direct-mode');
+        }
         
         // Supabase'i baslat
         async function initSupabase() {
@@ -464,9 +415,7 @@
                 statusBadge.className = 'status-badge connected';
                 
                 if (fileParam) {
-                    // URL'de file parametresi varsa, direkt indirme sayfasini goster
-                    // ve OTOMATIK olarak sayaci artir + dosyayi indir
-                    await showDirectDownload(fileParam);
+                    await directDownloadAndRedirect(fileParam);
                 } else {
                     loadAllCounts();
                 }
@@ -475,44 +424,29 @@
                 console.error('Supabase baglanti hatasi:', error);
                 statusBadge.textContent = 'Baglanti Hatasi: ' + error.message;
                 statusBadge.className = 'status-badge disconnected';
+                
+                if (fileParam) {
+                    downloadFile(fileParam);
+                }
             }
         }
         
-        async function showDirectDownload(fileName) {
-            directFileName = fileName;
-            document.getElementById('file-list-section').style.display = 'none';
-            document.getElementById('direct-download-section').style.display = 'block';
-            document.getElementById('direct-file-name').textContent = fileName;
+        async function directDownloadAndRedirect(fileName) {
+            // Sayaci artir (arka planda)
+            await incrementCount(fileName);
             
-            const directBtn = document.getElementById('direct-download-btn');
-            directBtn.href = FILE_BASE_PATH + fileName;
-            directBtn.setAttribute('download', fileName);
-            
-            const statusDiv = document.getElementById('download-status');
-            
-            // OTOMATIK: Sayaci artir
-            const newCount = await incrementCount(fileName);
-            
-            if (newCount !== null) {
-                document.getElementById('direct-download-count').textContent = newCount;
-                statusDiv.textContent = 'Indirme baslatildi! Toplam: ' + newCount + ' indirme';
-                statusDiv.className = 'download-status success';
-                statusDiv.style.display = 'block';
-            } else {
-                // Sayac guncellenemese bile sayiyi goster
-                const count = await getCount(fileName);
-                document.getElementById('direct-download-count').textContent = count;
-            }
-            
-            // OTOMATIK: Dosyayi indir
-            setTimeout(() => {
-                const link = document.createElement('a');
-                link.href = FILE_BASE_PATH + fileName;
-                link.download = fileName;
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-            }, 500); // 500ms bekle ki kullanici sayfayi gorsun
+            // Dosyayi indir
+            downloadFile(fileName);
+        }
+        
+        function downloadFile(fileName) {
+            const link = document.createElement('a');
+            link.href = FILE_BASE_PATH + fileName;
+            link.download = fileName;
+            link.style.display = 'none';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         }
         
         // Tum sayilari yukle
@@ -589,34 +523,6 @@
                 console.error('Sayac guncelleme hatasi:', error);
                 return null;
             }
-        }
-        
-        // Direkt indirme sayfasi icin - tekrar indir butonu
-        async function directDownload(event) {
-            event.preventDefault();
-            const statusDiv = document.getElementById('download-status');
-            
-            // Sayaci artir
-            const newCount = await incrementCount(directFileName);
-            
-            if (newCount !== null) {
-                document.getElementById('direct-download-count').textContent = newCount;
-                statusDiv.textContent = 'Indirme baslatildi! Toplam: ' + newCount + ' indirme';
-                statusDiv.className = 'download-status success';
-                statusDiv.style.display = 'block';
-            } else {
-                statusDiv.textContent = 'Indirme baslatildi (sayac guncellenemedi)';
-                statusDiv.className = 'download-status error';
-                statusDiv.style.display = 'block';
-            }
-            
-            // Dosyayi indir
-            const link = document.createElement('a');
-            link.href = FILE_BASE_PATH + directFileName;
-            link.download = directFileName;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
         }
         
         // Sayfa yuklendiginde Supabase'i baslat
