@@ -185,10 +185,6 @@
             margin-top: auto;
         }
 
-        .loading {
-            opacity: 0.5;
-        }
-
         @media (max-width: 640px) {
             .file-item {
                 flex-direction: column;
@@ -220,8 +216,74 @@
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
                 Batch & Text Files
             </div>
-            <div class="files-list" id="text-files">
-                <!-- Dosyalar JavaScript ile yüklenecek -->
+            <div class="files-list">
+                <!-- link.txt -->
+                <div class="file-item">
+                    <div class="file-info">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
+                        <span class="file-name">link.txt</span>
+                    </div>
+                    <div class="file-actions">
+                        <div class="download-count">
+                            <span id="count-link.txt">0</span> indirme
+                        </div>
+                        <button class="download-btn" onclick="downloadFile('link.txt', 'files/link.txt')">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+                            İndir
+                        </button>
+                    </div>
+                </div>
+
+                <!-- link2.txt -->
+                <div class="file-item">
+                    <div class="file-info">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
+                        <span class="file-name">link2.txt</span>
+                    </div>
+                    <div class="file-actions">
+                        <div class="download-count">
+                            <span id="count-link2.txt">0</span> indirme
+                        </div>
+                        <button class="download-btn" onclick="downloadFile('link2.txt', 'files/link2.txt')">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+                            İndir
+                        </button>
+                    </div>
+                </div>
+
+                <!-- link3.txt -->
+                <div class="file-item">
+                    <div class="file-info">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
+                        <span class="file-name">link3.txt</span>
+                    </div>
+                    <div class="file-actions">
+                        <div class="download-count">
+                            <span id="count-link3.txt">0</span> indirme
+                        </div>
+                        <button class="download-btn" onclick="downloadFile('link3.txt', 'files/link3.txt')">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+                            İndir
+                        </button>
+                    </div>
+                </div>
+
+                <!-- link4.txt -->
+                <div class="file-item">
+                    <div class="file-info">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
+                        <span class="file-name">link4.txt</span>
+                    </div>
+                    <div class="file-actions">
+                        <div class="download-count">
+                            <span id="count-link4.txt">0</span> indirme
+                        </div>
+                        <button class="download-btn" onclick="downloadFile('link4.txt', 'files/link4.txt')">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+                            İndir
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -231,8 +293,40 @@
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
                 ZIP Files
             </div>
-            <div class="files-list" id="zip-files">
-                <!-- Dosyalar JavaScript ile yüklenecek -->
+            <div class="files-list">
+                <!-- comment.zip -->
+                <div class="file-item">
+                    <div class="file-info">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+                        <span class="file-name">comment.zip</span>
+                    </div>
+                    <div class="file-actions">
+                        <div class="download-count">
+                            <span id="count-comment.zip">0</span> indirme
+                        </div>
+                        <button class="download-btn emerald" onclick="downloadFile('comment.zip', 'files/comment.zip')">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+                            İndir
+                        </button>
+                    </div>
+                </div>
+
+                <!-- comnent.zip -->
+                <div class="file-item">
+                    <div class="file-info">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+                        <span class="file-name">comnent.zip</span>
+                    </div>
+                    <div class="file-actions">
+                        <div class="download-count">
+                            <span id="count-comnent.zip">0</span> indirme
+                        </div>
+                        <button class="download-btn emerald" onclick="downloadFile('comnent.zip', 'files/comnent.zip')">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+                            İndir
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     </main>
@@ -251,85 +345,65 @@
         const SUPABASE_URL = 'https://detjrfbjdnozpimohyvd.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRldGpyZmJqZG5venBpbW9oeXZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDY2NTU4NTAsImV4cCI6MjA2MjIzMTg1MH0.5c7lUFe7WELVAsJjM8w8_qtLRuAQZGOJpJEcOdvT4Dk';
         
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-        const BASE_PATH = '/viskii';
-
-        // Dosya listesi - tam yollar ile
-        const textFiles = [
-            { name: 'link.txt', href: `${BASE_PATH}/files/link.txt` },
-            { name: 'link2.txt', href: `${BASE_PATH}/files/link2.txt` },
-            { name: 'link3.txt', href: `${BASE_PATH}/files/link3.txt` },
-            { name: 'link4.txt', href: `${BASE_PATH}/files/link4.txt` },
-        ];
-
-        const zipFiles = [
-            { name: 'comment.zip', href: `${BASE_PATH}/files/comment.zip` },
-            { name: 'comnent.zip', href: `${BASE_PATH}/files/comnent.zip` },
-        ];
-
-        // İndirme sayılarını tutan obje
-        let downloadCounts = {};
+        let supabaseClient = null;
+        
+        // Supabase'i başlat
+        try {
+            supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            loadDownloadCounts();
+        } catch (err) {
+            console.error('Supabase bağlantısı kurulamadı:', err);
+        }
 
         // Sayfa yüklendiğinde sayıları çek
         async function loadDownloadCounts() {
+            if (!supabaseClient) return;
+            
             try {
-                const { data, error } = await supabase
+                const { data, error } = await supabaseClient
                     .from('download_counts')
                     .select('file_name, count');
                 
                 if (error) throw error;
                 
                 data.forEach(item => {
-                    downloadCounts[item.file_name] = item.count;
+                    const el = document.getElementById('count-' + item.file_name);
+                    if (el) el.textContent = item.count;
                 });
-                
-                renderFiles();
             } catch (err) {
                 console.error('Sayılar yüklenemedi:', err);
-                renderFiles();
             }
         }
 
         // İndirme sayısını artır
         async function incrementDownload(fileName) {
+            if (!supabaseClient) return;
+            
             try {
-                // Önce mevcut sayıyı kontrol et
-                const { data: existing } = await supabase
+                const { data: existing } = await supabaseClient
                     .from('download_counts')
                     .select('count')
                     .eq('file_name', fileName)
                     .single();
 
                 if (existing) {
-                    // Güncelle
-                    await supabase
+                    await supabaseClient
                         .from('download_counts')
                         .update({ count: existing.count + 1, updated_at: new Date().toISOString() })
                         .eq('file_name', fileName);
                     
-                    downloadCounts[fileName] = existing.count + 1;
+                    const el = document.getElementById('count-' + fileName);
+                    if (el) el.textContent = existing.count + 1;
                 } else {
-                    // Yeni kayıt oluştur
-                    await supabase
+                    await supabaseClient
                         .from('download_counts')
                         .insert({ file_name: fileName, count: 1 });
                     
-                    downloadCounts[fileName] = 1;
+                    const el = document.getElementById('count-' + fileName);
+                    if (el) el.textContent = 1;
                 }
-
-                // UI'ı güncelle
-                updateCountDisplay(fileName);
             } catch (err) {
                 console.error('Sayaç güncellenemedi:', err);
-            }
-        }
-
-        // Sayaç gösterimini güncelle
-        function updateCountDisplay(fileName) {
-            const countElement = document.getElementById(`count-${fileName}`);
-            if (countElement) {
-                countElement.textContent = downloadCounts[fileName] || 0;
             }
         }
 
@@ -346,40 +420,6 @@
             link.click();
             document.body.removeChild(link);
         }
-
-        // Dosya HTML'i oluştur
-        function createFileItem(file, btnClass = '') {
-            const count = downloadCounts[file.name] || 0;
-            return `
-                <div class="file-item">
-                    <div class="file-info">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
-                        <span class="file-name">${file.name}</span>
-                    </div>
-                    <div class="file-actions">
-                        <div class="download-count">
-                            <span id="count-${file.name}">${count}</span> indirme
-                        </div>
-                        <button class="download-btn ${btnClass}" onclick="downloadFile('${file.name}', '${file.href}')">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
-                            İndir
-                        </button>
-                    </div>
-                </div>
-            `;
-        }
-
-        // Dosyaları render et
-        function renderFiles() {
-            const textContainer = document.getElementById('text-files');
-            const zipContainer = document.getElementById('zip-files');
-
-            textContainer.innerHTML = textFiles.map(f => createFileItem(f)).join('');
-            zipContainer.innerHTML = zipFiles.map(f => createFileItem(f, 'emerald')).join('');
-        }
-
-        // Sayfa yüklendiğinde başlat
-        loadDownloadCounts();
     </script>
 </body>
 </html>
