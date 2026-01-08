@@ -143,7 +143,6 @@
             font-weight: 600;
         }
 
-        /* Buton yerine <a> etiketi kullanilacak, sag tikla kopyalanabilir */
         .download-btn {
             display: inline-flex;
             align-items: center;
@@ -211,7 +210,6 @@
             border: 1px solid rgba(239, 68, 68, 0.3);
         }
 
-        /* Direct download sayfasi icin stiller */
         .direct-download-container {
             display: flex;
             flex-direction: column;
@@ -288,10 +286,9 @@
                 <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
                 <h2 id="direct-file-name">Dosya Indirme</h2>
                 <p>Indirme sayisi: <span id="direct-download-count" style="color: #3b82f6; font-weight: 600;">0</span></p>
-                <!-- Direct download icin de <a> etiketi -->
                 <a id="direct-download-btn" class="download-btn emerald" href="#" onclick="directDownload(event)">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
-                    Dosyayi Indir
+                    Tekrar Indir
                 </a>
                 <div id="download-status" class="download-status" style="display: none;"></div>
             </div>
@@ -316,8 +313,7 @@
                             <div class="download-count">
                                 <span id="count-link.txt">0</span> indirme
                             </div>
-                            <!-- button yerine <a> etiketi, href ile dosya linki -->
-                            <a class="download-btn" href="files/link.txt" download="link.txt" onclick="downloadFile(event, 'link.txt')">
+                            <a class="download-btn" href="download.html?file=link.txt">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
                                 Indir
                             </a>
@@ -334,7 +330,7 @@
                             <div class="download-count">
                                 <span id="count-link2.txt">0</span> indirme
                             </div>
-                            <a class="download-btn" href="files/link2.txt" download="link2.txt" onclick="downloadFile(event, 'link2.txt')">
+                            <a class="download-btn" href="download.html?file=link2.txt">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
                                 Indir
                             </a>
@@ -351,7 +347,7 @@
                             <div class="download-count">
                                 <span id="count-link3.txt">0</span> indirme
                             </div>
-                            <a class="download-btn" href="files/link3.txt" download="link3.txt" onclick="downloadFile(event, 'link3.txt')">
+                            <a class="download-btn" href="download.html?file=link3.txt">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
                                 Indir
                             </a>
@@ -368,7 +364,7 @@
                             <div class="download-count">
                                 <span id="count-link4.txt">0</span> indirme
                             </div>
-                            <a class="download-btn" href="files/link4.txt" download="link4.txt" onclick="downloadFile(event, 'link4.txt')">
+                            <a class="download-btn" href="download.html?file=link4.txt">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
                                 Indir
                             </a>
@@ -394,7 +390,7 @@
                             <div class="download-count">
                                 <span id="count-comment.zip">0</span> indirme
                             </div>
-                            <a class="download-btn emerald" href="files/comment.zip" download="comment.zip" onclick="downloadFile(event, 'comment.zip')">
+                            <a class="download-btn emerald" href="download.html?file=comment.zip">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
                                 Indir
                             </a>
@@ -411,7 +407,7 @@
                             <div class="download-count">
                                 <span id="count-comnent.zip">0</span> indirme
                             </div>
-                            <a class="download-btn emerald" href="files/comnent.zip" download="comnent.zip" onclick="downloadFile(event, 'comnent.zip')">
+                            <a class="download-btn emerald" href="download.html?file=comnent.zip">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
                                 Indir
                             </a>
@@ -468,7 +464,9 @@
                 statusBadge.className = 'status-badge connected';
                 
                 if (fileParam) {
-                    showDirectDownload(fileParam);
+                    // URL'de file parametresi varsa, direkt indirme sayfasini goster
+                    // ve OTOMATIK olarak sayaci artir + dosyayi indir
+                    await showDirectDownload(fileParam);
                 } else {
                     loadAllCounts();
                 }
@@ -480,7 +478,6 @@
             }
         }
         
-        // Direkt indirme sayfasini goster
         async function showDirectDownload(fileName) {
             directFileName = fileName;
             document.getElementById('file-list-section').style.display = 'none';
@@ -491,9 +488,31 @@
             directBtn.href = FILE_BASE_PATH + fileName;
             directBtn.setAttribute('download', fileName);
             
-            // Sayaci yukle
-            const count = await getCount(fileName);
-            document.getElementById('direct-download-count').textContent = count;
+            const statusDiv = document.getElementById('download-status');
+            
+            // OTOMATIK: Sayaci artir
+            const newCount = await incrementCount(fileName);
+            
+            if (newCount !== null) {
+                document.getElementById('direct-download-count').textContent = newCount;
+                statusDiv.textContent = 'Indirme baslatildi! Toplam: ' + newCount + ' indirme';
+                statusDiv.className = 'download-status success';
+                statusDiv.style.display = 'block';
+            } else {
+                // Sayac guncellenemese bile sayiyi goster
+                const count = await getCount(fileName);
+                document.getElementById('direct-download-count').textContent = count;
+            }
+            
+            // OTOMATIK: Dosyayi indir
+            setTimeout(() => {
+                const link = document.createElement('a');
+                link.href = FILE_BASE_PATH + fileName;
+                link.download = fileName;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }, 500); // 500ms bekle ki kullanici sayfayi gorsun
         }
         
         // Tum sayilari yukle
@@ -572,23 +591,9 @@
             }
         }
         
-        // Dosya indirme - tiklandiginda sayaci artir
-        async function downloadFile(event, fileName) {
-            // Sayaci artir
-            const newCount = await incrementCount(fileName);
-            
-            if (newCount !== null) {
-                const countEl = document.getElementById('count-' + fileName);
-                if (countEl) {
-                    countEl.textContent = newCount;
-                }
-            }
-            
-            // Indirme normal <a> href ile devam edecek, engelleme yok
-        }
-        
-        // Direkt indirme sayfasi icin
+        // Direkt indirme sayfasi icin - tekrar indir butonu
         async function directDownload(event) {
+            event.preventDefault();
             const statusDiv = document.getElementById('download-status');
             
             // Sayaci artir
@@ -605,7 +610,13 @@
                 statusDiv.style.display = 'block';
             }
             
-            // Indirme normal <a> href ile devam edecek
+            // Dosyayi indir
+            const link = document.createElement('a');
+            link.href = FILE_BASE_PATH + directFileName;
+            link.download = directFileName;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         }
         
         // Sayfa yuklendiginde Supabase'i baslat
