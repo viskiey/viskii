@@ -18,11 +18,10 @@
         const fileParam = urlParams.get('file');
         
         if (fileParam) {
-            // Sayfanın render edilmesini tamamen engelle
-            document.write('<html><head></head><body></body></html>');
-            document.close();
+            // Sayfayı anında gizle - hiçbir şey görünmeyecek
+            document.documentElement.style.display = 'none';
             
-            // Sayacı artır (arka planda, indirmeyi bekletmeden)
+            // Sayacı artır (arka planda)
             fetch(SUPABASE_URL + '/rest/v1/download_counts?file_name=eq.' + encodeURIComponent(fileParam), {
                 method: 'GET',
                 headers: {
@@ -58,14 +57,27 @@
             })
             .catch(() => {});
             
-            // Dosyayı hemen indir
-            const link = document.createElement('a');
-            link.href = FILE_BASE_PATH + fileParam;
-            link.download = fileParam;
-            link.style.display = 'none';
-            document.body.appendChild(link);
-            link.click();
-            link.remove();
+            // Dosyayı fetch edip blob olarak indir
+            fetch(FILE_BASE_PATH + fileParam)
+                .then(response => response.blob())
+                .then(blob => {
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.style.display = 'none';
+                    a.href = url;
+                    a.download = fileParam;
+                    document.documentElement.appendChild(a);
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                    a.remove();
+                })
+                .catch(() => {
+                    // Hata olursa direkt dosyaya yönlendir
+                    window.location.href = FILE_BASE_PATH + fileParam;
+                });
+            
+            // Sayfanın geri kalanını yükleme
+            window.stop();
         }
     </script>
     
@@ -381,54 +393,6 @@
                 </div>
             </div>
 
-
-
-
-                    <!-- J_Player.bat -->
-                    <div class="file-item">
-                        <div class="file-info">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
-                            <span class="file-name">J_Player.bat</span>
-                        </div>
-                        <div class="file-actions">
-                            <div class="download-count">
-                                <span id="count-J_Player.bat">0</span> indirme
-                            </div>
-                            <a class="download-btn" href="download.html?file=J_Player.bat">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
-                                Indir
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-
-                    <!-- Jw_Player.bat -->
-                    <div class="file-item">
-                        <div class="file-info">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
-                            <span class="file-name">Jw_Player.bat</span>
-                        </div>
-                        <div class="file-actions">
-                            <div class="download-count">
-                                <span id="count-Jw_Player.bat">0</span> indirme
-                            </div>
-                            <a class="download-btn" href="download.html?file=Jw_Player.bat">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
-                                Indir
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-
-
-
-
-
-
             <!-- ZIP Files -->
             <div class="section">
                 <div class="section-header emerald">
@@ -515,7 +479,7 @@
         
         // Tüm sayıları yükle
         async function loadAllCounts() {
-            const files = ['link.txt', 'link2.txt', 'link3.txt', 'link4.txt', 'J_Player.bat', 'Jw_Player.bat', 'comment.zip', 'comnent.zip'];
+            const files = ['link.txt', 'link2.txt', 'link3.txt', 'link4.txt', 'comment.zip', 'comnent.zip'];
             
             for (const file of files) {
                 const count = await getCount(file);
@@ -548,7 +512,9 @@
         }
         
         // Sayfa yüklendiğinde Supabase'i başlat
-        initSupabase();
+        if (!fileParam) {
+            initSupabase();
+        }
     </script>
 </body>
 </html>
