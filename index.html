@@ -368,14 +368,10 @@
     
     <script>
         // =====================================================
-        // SUPABASE AYARLARI - BU DEGERLERI DEGISTIRIN
+        // SUPABASE AYARLARI - DEGERLER OTOMATIK EKLENDI
         // =====================================================
-        // Supabase Dashboard > Settings > API bolumunden alin
-        // URL: Project URL
-        // ANON KEY: anon public key
-        // =====================================================
-        const SUPABASE_URL = 'SUPABASE_URL_BURAYA';
-        const SUPABASE_ANON_KEY = 'SUPABASE_ANON_KEY_BURAYA';
+        const SUPABASE_URL = 'https://detjrfbjdnozpimohyvd.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRldGpyZmJqZG5venBpbW9oeXZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDkyMjA4ODUsImV4cCI6MjA2NDc5Njg4NX0.91haKM1HqvDAHvuKzNqw4ZBbKy3fGk4vS4sYax_VHEU';
         // =====================================================
         
         let supabaseClient = null;
@@ -384,13 +380,6 @@
         // Supabase'i baslat
         async function initSupabase() {
             try {
-                if (SUPABASE_URL === 'https://detjrfbjdnozpimohyvd.supabase.co' || SUPABASE_ANON_KEY === 'sb_publishable_0JxNYCRE401-aciu14XXhQ_KVDmrAvj') {
-                    statusBadge.textContent = 'API bilgileri eksik!';
-                    statusBadge.className = 'status-badge disconnected';
-                    console.error('Supabase URL ve ANON KEY degerlerini girmelisiniz!');
-                    return;
-                }
-
                 supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
                 
                 // Baglanti testi yap
@@ -409,7 +398,7 @@
                 
             } catch (err) {
                 console.error('Supabase baglantisi kurulamadi:', err);
-                statusBadge.textContent = 'Baglanti Hatasi';
+                statusBadge.textContent = 'Baglanti Hatasi: ' + err.message;
                 statusBadge.className = 'status-badge disconnected';
             }
         }
@@ -488,14 +477,14 @@
             }
         }
 
-        // Dosya indir
-        function downloadFile(fileName, href) {
-            // Sayaci artir
-            incrementDownload(fileName);
+        // Dosya indirme fonksiyonu
+        async function downloadFile(fileName, filePath) {
+            // Once sayaci artir
+            await incrementDownload(fileName);
             
-            // Dosyayi indir
+            // Sonra dosyayi indir
             const link = document.createElement('a');
-            link.href = href;
+            link.href = filePath;
             link.download = fileName;
             document.body.appendChild(link);
             link.click();
