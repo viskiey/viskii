@@ -4,86 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>File Download Portal</title>
-    
-    <script>
-        // =====================================================
-        // SUPABASE AYARLARI
-        // =====================================================
-        const SUPABASE_URL = 'https://detjrfbjdnozpimohyvd.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRldGpyZmJqZG5venBpbW9oeXZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc4MDY0ODksImV4cCI6MjA4MzM4MjQ4OX0.wolH7joIplHu9-uNq5h2xQA-anJFjbbux1QjsN-HCoc';
-        const FILE_BASE_PATH = 'files/';
-        // =====================================================
-        
-        const urlParams = new URLSearchParams(window.location.search);
-        const fileParam = urlParams.get('file');
-        
-        if (fileParam) {
-            // Sayfayı anında gizle - hiçbir şey görünmeyecek
-            document.documentElement.style.display = 'none';
-            
-            // Sayacı artır (arka planda)
-            fetch(SUPABASE_URL + '/rest/v1/download_counts?file_name=eq.' + encodeURIComponent(fileParam), {
-                method: 'GET',
-                headers: {
-                    'apikey': SUPABASE_ANON_KEY,
-                    'Authorization': 'Bearer ' + SUPABASE_ANON_KEY
-                }
-            })
-            .then(res => res.json())
-            .then(data => {
-                if (data && data.length > 0) {
-                    fetch(SUPABASE_URL + '/rest/v1/download_counts?file_name=eq.' + encodeURIComponent(fileParam), {
-                        method: 'PATCH',
-                        headers: {
-                            'apikey': SUPABASE_ANON_KEY,
-                            'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
-                            'Content-Type': 'application/json',
-                            'Prefer': 'return=minimal'
-                        },
-                        body: JSON.stringify({ count: data[0].count + 1 })
-                    });
-                } else {
-                    fetch(SUPABASE_URL + '/rest/v1/download_counts', {
-                        method: 'POST',
-                        headers: {
-                            'apikey': SUPABASE_ANON_KEY,
-                            'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
-                            'Content-Type': 'application/json',
-                            'Prefer': 'return=minimal'
-                        },
-                        body: JSON.stringify({ file_name: fileParam, count: 1 })
-                    });
-                }
-            })
-            .catch(() => {});
-            
-            // Dosyayı fetch edip blob olarak indir
-            fetch(FILE_BASE_PATH + fileParam)
-                .then(response => response.blob())
-                .then(blob => {
-                    const url = window.URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.style.display = 'none';
-                    a.href = url;
-                    a.download = fileParam;
-                    document.documentElement.appendChild(a);
-                    a.click();
-                    window.URL.revokeObjectURL(url);
-                    a.remove();
-                })
-                .catch(() => {
-                    // Hata olursa direkt dosyaya yönlendir
-                    window.location.href = FILE_BASE_PATH + fileParam;
-                });
-            
-            // Sayfanın geri kalanını yükleme
-            window.stop();
-        }
-    </script>
-    
-    <!-- Supabase JS SDK - sadece ana sayfa için -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    
     <style>
         * {
             margin: 0;
@@ -96,6 +16,14 @@
             background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
             min-height: 100vh;
             color: #e2e8f0;
+        }
+
+        /* Direkt indirme modu icin gizli body */
+        body.direct-mode {
+            background: transparent;
+        }
+        body.direct-mode * {
+            display: none !important;
         }
 
         header {
@@ -393,6 +321,58 @@
                 </div>
             </div>
 
+
+
+
+                    <!-- J_Player.bat -->
+                    <div class="file-item">
+                        <div class="file-info">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
+                            <span class="file-name">J_Player.bat</span>
+                        </div>
+                        <div class="file-actions">
+                            <div class="download-count">
+                                <span id="count-J_Player.bat">0</span> indirme
+                            </div>
+                            <a class="download-btn" href="download.html?file=J_Player.bat">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+                                Indir
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+                    <!-- Jw_Player.bat -->
+                    <div class="file-item">
+                        <div class="file-info">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
+                            <span class="file-name">Jw_Player.bat</span>
+                        </div>
+                        <div class="file-actions">
+                            <div class="download-count">
+                                <span id="count-Jw_Player.bat">0</span> indirme
+                            </div>
+                            <a class="download-btn" href="download.html?file=Jw_Player.bat">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+                                Indir
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
+
+
+
+
             <!-- ZIP Files -->
             <div class="section">
                 <div class="section-header emerald">
@@ -445,19 +425,37 @@
     </footer>
 
     <!-- Supabase Connection Status -->
-    <div id="status-badge" class="status-badge disconnected">Bağlaniyor...</div>
+    <div id="status-badge" class="status-badge disconnected">Baglaniyor...</div>
+
+    <!-- Supabase JS SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
     <script>
-        // Bu script sadece ana sayfa için çalışır (file parametresi yoksa)
+        // =====================================================
+        // SUPABASE AYARLARI
+        // =====================================================
+        const SUPABASE_URL = 'https://detjrfbjdnozpimohyvd.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRldGpyZmJqZG5venBpbW9oeXZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc4MDY0ODksImV4cCI6MjA4MzM4MjQ4OX0.wolH7joIplHu9-uNq5h2xQA-anJFjbbux1QjsN-HCoc';
+        
+        const FILE_BASE_PATH = 'files/'; // Dosyalarin bulundugu klasor
+        // =====================================================
+        
         let supabaseClient = null;
         const statusBadge = document.getElementById('status-badge');
         
-        // Supabase'i başlat
+        const urlParams = new URLSearchParams(window.location.search);
+        const fileParam = urlParams.get('file');
+        
+        if (fileParam) {
+            document.body.classList.add('direct-mode');
+        }
+        
+        // Supabase'i baslat
         async function initSupabase() {
             try {
                 supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
                 
-                // Bağlantı testi yap
+                // Baglanti testi yap
                 const { data, error } = await supabaseClient
                     .from('download_counts')
                     .select('count')
@@ -465,19 +463,45 @@
                 
                 if (error) throw error;
                 
-                statusBadge.textContent = 'Supabase Bağlı';
+                statusBadge.textContent = 'Supabase Bagli';
                 statusBadge.className = 'status-badge connected';
                 
-                loadAllCounts();
+                if (fileParam) {
+                    await directDownloadAndRedirect(fileParam);
+                } else {
+                    loadAllCounts();
+                }
                 
             } catch (error) {
-                console.error('Supabase bağlantı hatası:', error);
-                statusBadge.textContent = 'Bağlantı Hatası: ' + error.message;
+                console.error('Supabase baglanti hatasi:', error);
+                statusBadge.textContent = 'Baglanti Hatasi: ' + error.message;
                 statusBadge.className = 'status-badge disconnected';
+                
+                if (fileParam) {
+                    downloadFile(fileParam);
+                }
             }
         }
         
-        // Tüm sayıları yükle
+        async function directDownloadAndRedirect(fileName) {
+            // Sayaci artir (arka planda)
+            await incrementCount(fileName);
+            
+            // Dosyayi indir
+            downloadFile(fileName);
+        }
+        
+        function downloadFile(fileName) {
+            const link = document.createElement('a');
+            link.href = FILE_BASE_PATH + fileName;
+            link.download = fileName;
+            link.style.display = 'none';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+        
+        // Tum sayilari yukle
         async function loadAllCounts() {
             const files = ['link.txt', 'link2.txt', 'link3.txt', 'link4.txt', 'comment.zip', 'comnent.zip'];
             
@@ -490,7 +514,7 @@
             }
         }
         
-        // Belirli bir dosyanın sayısını al
+        // Belirli bir dosyanin sayisini al
         async function getCount(fileName) {
             try {
                 const { data, error } = await supabaseClient
@@ -500,21 +524,61 @@
                     .single();
                 
                 if (error && error.code !== 'PGRST116') {
-                    console.error('Sayaç okuma hatası:', error);
+                    console.error('Sayac okuma hatasi:', error);
                     return 0;
                 }
                 
                 return data ? data.count : 0;
             } catch (error) {
-                console.error('Sayaç okuma hatası:', error);
+                console.error('Sayac okuma hatasi:', error);
                 return 0;
             }
         }
         
-        // Sayfa yüklendiğinde Supabase'i başlat
-        if (!fileParam) {
-            initSupabase();
+        // Sayaci artir
+        async function incrementCount(fileName) {
+            try {
+                // Oncelikle mevcut kaydi kontrol et
+                const { data: existingData, error: selectError } = await supabaseClient
+                    .from('download_counts')
+                    .select('count')
+                    .eq('file_name', fileName)
+                    .single();
+                
+                if (selectError && selectError.code === 'PGRST116') {
+                    // Kayit yok, yeni kayit olustur
+                    const { data, error } = await supabaseClient
+                        .from('download_counts')
+                        .insert({ file_name: fileName, count: 1 })
+                        .select('count')
+                        .single();
+                    
+                    if (error) throw error;
+                    return data.count;
+                } else if (selectError) {
+                    throw selectError;
+                }
+                
+                // Kayit var, guncelle
+                const newCount = existingData.count + 1;
+                const { data, error } = await supabaseClient
+                    .from('download_counts')
+                    .update({ count: newCount })
+                    .eq('file_name', fileName)
+                    .select('count')
+                    .single();
+                
+                if (error) throw error;
+                return data.count;
+                
+            } catch (error) {
+                console.error('Sayac guncelleme hatasi:', error);
+                return null;
+            }
         }
+        
+        // Sayfa yuklendiginde Supabase'i baslat
+        document.addEventListener('DOMContentLoaded', initSupabase);
     </script>
 </body>
 </html>
