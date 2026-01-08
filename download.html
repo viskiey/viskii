@@ -18,10 +18,11 @@
         const fileParam = urlParams.get('file');
         
         if (fileParam) {
-            // Sayfayı tamamen gizle
-            document.documentElement.style.display = 'none';
+            // Sayfanın render edilmesini tamamen engelle
+            document.write('<html><head></head><body></body></html>');
+            document.close();
             
-            // Sayacı artır (REST API ile - SDK yüklenmeden)
+            // Sayacı artır (arka planda, indirmeyi bekletmeden)
             fetch(SUPABASE_URL + '/rest/v1/download_counts?file_name=eq.' + encodeURIComponent(fileParam), {
                 method: 'GET',
                 headers: {
@@ -32,8 +33,7 @@
             .then(res => res.json())
             .then(data => {
                 if (data && data.length > 0) {
-                    // Mevcut kayıt var, güncelle
-                    return fetch(SUPABASE_URL + '/rest/v1/download_counts?file_name=eq.' + encodeURIComponent(fileParam), {
+                    fetch(SUPABASE_URL + '/rest/v1/download_counts?file_name=eq.' + encodeURIComponent(fileParam), {
                         method: 'PATCH',
                         headers: {
                             'apikey': SUPABASE_ANON_KEY,
@@ -44,8 +44,7 @@
                         body: JSON.stringify({ count: data[0].count + 1 })
                     });
                 } else {
-                    // Yeni kayıt ekle
-                    return fetch(SUPABASE_URL + '/rest/v1/download_counts', {
+                    fetch(SUPABASE_URL + '/rest/v1/download_counts', {
                         method: 'POST',
                         headers: {
                             'apikey': SUPABASE_ANON_KEY,
@@ -57,18 +56,16 @@
                     });
                 }
             })
-            .catch(() => {})
-            .finally(() => {
-                // Dosyayı indir (yönlendirme değil, download)
-                const link = document.createElement('a');
-                link.href = FILE_BASE_PATH + fileParam;
-                link.download = fileParam;
-                document.body.appendChild(link);
-                link.click();
-            });
+            .catch(() => {});
             
-            // Sayfanın geri kalanını yükleme
-            window.stop();
+            // Dosyayı hemen indir
+            const link = document.createElement('a');
+            link.href = FILE_BASE_PATH + fileParam;
+            link.download = fileParam;
+            link.style.display = 'none';
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
         }
     </script>
     
