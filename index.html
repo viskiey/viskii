@@ -185,6 +185,29 @@
             margin-top: auto;
         }
 
+        .status-badge {
+            position: fixed;
+            bottom: 1rem;
+            right: 1rem;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            z-index: 1000;
+        }
+
+        .status-badge.connected {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .status-badge.disconnected {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
         @media (max-width: 640px) {
             .file-item {
                 flex-direction: column;
@@ -229,7 +252,7 @@
                         </div>
                         <button class="download-btn" onclick="downloadFile('link.txt', 'files/link.txt')">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
-                            İndir
+                            Indir
                         </button>
                     </div>
                 </div>
@@ -246,7 +269,7 @@
                         </div>
                         <button class="download-btn" onclick="downloadFile('link2.txt', 'files/link2.txt')">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
-                            İndir
+                            Indir
                         </button>
                     </div>
                 </div>
@@ -263,7 +286,7 @@
                         </div>
                         <button class="download-btn" onclick="downloadFile('link3.txt', 'files/link3.txt')">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
-                            İndir
+                            Indir
                         </button>
                     </div>
                 </div>
@@ -280,7 +303,7 @@
                         </div>
                         <button class="download-btn" onclick="downloadFile('link4.txt', 'files/link4.txt')">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
-                            İndir
+                            Indir
                         </button>
                     </div>
                 </div>
@@ -306,7 +329,7 @@
                         </div>
                         <button class="download-btn emerald" onclick="downloadFile('comment.zip', 'files/comment.zip')">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
-                            İndir
+                            Indir
                         </button>
                     </div>
                 </div>
@@ -323,7 +346,7 @@
                         </div>
                         <button class="download-btn emerald" onclick="downloadFile('comnent.zip', 'files/comnent.zip')">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
-                            İndir
+                            Indir
                         </button>
                     </div>
                 </div>
@@ -337,25 +360,61 @@
         </div>
     </footer>
 
+    <!-- Supabase Connection Status -->
+    <div id="status-badge" class="status-badge disconnected">Baglaniyor...</div>
+
     <!-- Supabase JS SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
     <script>
-        // Supabase bağlantısı
-        const SUPABASE_URL = 'https://detjrfbjdnozpimohyvd.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRldGpyZmJqZG5venBpbW9oeXZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDY2NTU4NTAsImV4cCI6MjA2MjIzMTg1MH0.5c7lUFe7WELVAsJjM8w8_qtLRuAQZGOJpJEcOdvT4Dk';
+        // =====================================================
+        // SUPABASE AYARLARI - BU DEGERLERI DEGISTIRIN
+        // =====================================================
+        // Supabase Dashboard > Settings > API bolumunden alin
+        // URL: Project URL
+        // ANON KEY: anon public key
+        // =====================================================
+        const SUPABASE_URL = 'SUPABASE_URL_BURAYA';
+        const SUPABASE_ANON_KEY = 'SUPABASE_ANON_KEY_BURAYA';
+        // =====================================================
         
         let supabaseClient = null;
+        const statusBadge = document.getElementById('status-badge');
         
-        // Supabase'i başlat
-        try {
-            supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-            loadDownloadCounts();
-        } catch (err) {
-            console.error('Supabase bağlantısı kurulamadı:', err);
+        // Supabase'i baslat
+        async function initSupabase() {
+            try {
+                if (SUPABASE_URL === 'detjrfbjdnozpimohyvd' || SUPABASE_ANON_KEY === 'sbp_11893e3528d1949162be0366d55822edd55659c1') {
+                    statusBadge.textContent = 'API bilgileri eksik!';
+                    statusBadge.className = 'status-badge disconnected';
+                    console.error('Supabase URL ve ANON KEY degerlerini girmelisiniz!');
+                    return;
+                }
+
+                supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                
+                // Baglanti testi yap
+                const { data, error } = await supabaseClient
+                    .from('download_counts')
+                    .select('count')
+                    .limit(1);
+                
+                if (error) throw error;
+                
+                statusBadge.textContent = 'Supabase Bagli';
+                statusBadge.className = 'status-badge connected';
+                
+                // Sayilari yukle
+                await loadDownloadCounts();
+                
+            } catch (err) {
+                console.error('Supabase baglantisi kurulamadi:', err);
+                statusBadge.textContent = 'Baglanti Hatasi';
+                statusBadge.className = 'status-badge disconnected';
+            }
         }
 
-        // Sayfa yüklendiğinde sayıları çek
+        // Sayfa yuklendiginde sayilari cek
         async function loadDownloadCounts() {
             if (!supabaseClient) return;
             
@@ -366,53 +425,75 @@
                 
                 if (error) throw error;
                 
-                data.forEach(item => {
-                    const el = document.getElementById('count-' + item.file_name);
-                    if (el) el.textContent = item.count;
-                });
+                if (data) {
+                    data.forEach(item => {
+                        const el = document.getElementById('count-' + item.file_name);
+                        if (el) el.textContent = item.count || 0;
+                    });
+                }
             } catch (err) {
-                console.error('Sayılar yüklenemedi:', err);
+                console.error('Sayilar yuklenemedi:', err);
             }
         }
 
-        // İndirme sayısını artır
+        // Indirme sayisini artir
         async function incrementDownload(fileName) {
             if (!supabaseClient) return;
             
             try {
-                const { data: existing } = await supabaseClient
+                // Mevcut kaydi kontrol et
+                const { data: existing, error: selectError } = await supabaseClient
                     .from('download_counts')
-                    .select('count')
+                    .select('id, count')
                     .eq('file_name', fileName)
                     .single();
 
+                if (selectError && selectError.code !== 'PGRST116') {
+                    throw selectError;
+                }
+
                 if (existing) {
-                    await supabaseClient
+                    // Guncelle
+                    const newCount = (existing.count || 0) + 1;
+                    const { error: updateError } = await supabaseClient
                         .from('download_counts')
-                        .update({ count: existing.count + 1, updated_at: new Date().toISOString() })
-                        .eq('file_name', fileName);
+                        .update({ 
+                            count: newCount, 
+                            updated_at: new Date().toISOString() 
+                        })
+                        .eq('id', existing.id);
+                    
+                    if (updateError) throw updateError;
                     
                     const el = document.getElementById('count-' + fileName);
-                    if (el) el.textContent = existing.count + 1;
+                    if (el) el.textContent = newCount;
                 } else {
-                    await supabaseClient
+                    // Yeni kayit ekle
+                    const { error: insertError } = await supabaseClient
                         .from('download_counts')
-                        .insert({ file_name: fileName, count: 1 });
+                        .insert({ 
+                            file_name: fileName, 
+                            count: 1,
+                            created_at: new Date().toISOString(),
+                            updated_at: new Date().toISOString()
+                        });
+                    
+                    if (insertError) throw insertError;
                     
                     const el = document.getElementById('count-' + fileName);
                     if (el) el.textContent = 1;
                 }
             } catch (err) {
-                console.error('Sayaç güncellenemedi:', err);
+                console.error('Sayac guncellenemedi:', err);
             }
         }
 
         // Dosya indir
         function downloadFile(fileName, href) {
-            // Sayacı artır
+            // Sayaci artir
             incrementDownload(fileName);
             
-            // Dosyayı indir
+            // Dosyayi indir
             const link = document.createElement('a');
             link.href = href;
             link.download = fileName;
@@ -420,6 +501,9 @@
             link.click();
             document.body.removeChild(link);
         }
+
+        // Sayfa yuklendiginde Supabase'i baslat
+        document.addEventListener('DOMContentLoaded', initSupabase);
     </script>
 </body>
 </html>
