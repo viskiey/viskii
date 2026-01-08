@@ -5,9 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>File Download Portal</title>
     
-    <!-- Supabase JS SDK - en başta yükle -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    
     <script>
         // =====================================================
         // SUPABASE AYARLARI
@@ -20,44 +17,63 @@
         const urlParams = new URLSearchParams(window.location.search);
         const fileParam = urlParams.get('file');
         
-        // Eğer file parametresi varsa, sayfa hiç render edilmeden direkt işlem yap
         if (fileParam) {
-            // Sayfa yüklenmesini durdur ve direkt redirect yap
-            (async function() {
-                try {
-                    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-                    
-                    // Sayacı artır (upsert)
-                    const { data: existing } = await supabaseClient
-                        .from('download_counts')
-                        .select('count')
-                        .eq('file_name', fileParam)
-                        .single();
-                    
-                    if (existing) {
-                        await supabaseClient
-                            .from('download_counts')
-                            .update({ count: existing.count + 1 })
-                            .eq('file_name', fileParam);
-                    } else {
-                        await supabaseClient
-                            .from('download_counts')
-                            .insert({ file_name: fileParam, count: 1 });
-                    }
-                } catch (e) {
-                    // Hata olsa bile indirmeye devam et
-                    console.log('Sayac hatasi:', e);
+            // Sayfayı tamamen gizle
+            document.documentElement.style.display = 'none';
+            
+            // Sayacı artır (REST API ile - SDK yüklenmeden)
+            fetch(SUPABASE_URL + '/rest/v1/download_counts?file_name=eq.' + encodeURIComponent(fileParam), {
+                method: 'GET',
+                headers: {
+                    'apikey': SUPABASE_ANON_KEY,
+                    'Authorization': 'Bearer ' + SUPABASE_ANON_KEY
                 }
-                
-                // Dosyaya direkt yönlendir - sayfa hiç görünmez
-                window.location.replace(FILE_BASE_PATH + fileParam);
-            })();
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data && data.length > 0) {
+                    // Mevcut kayıt var, güncelle
+                    return fetch(SUPABASE_URL + '/rest/v1/download_counts?file_name=eq.' + encodeURIComponent(fileParam), {
+                        method: 'PATCH',
+                        headers: {
+                            'apikey': SUPABASE_ANON_KEY,
+                            'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
+                            'Content-Type': 'application/json',
+                            'Prefer': 'return=minimal'
+                        },
+                        body: JSON.stringify({ count: data[0].count + 1 })
+                    });
+                } else {
+                    // Yeni kayıt ekle
+                    return fetch(SUPABASE_URL + '/rest/v1/download_counts', {
+                        method: 'POST',
+                        headers: {
+                            'apikey': SUPABASE_ANON_KEY,
+                            'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
+                            'Content-Type': 'application/json',
+                            'Prefer': 'return=minimal'
+                        },
+                        body: JSON.stringify({ file_name: fileParam, count: 1 })
+                    });
+                }
+            })
+            .catch(() => {})
+            .finally(() => {
+                // Dosyayı indir (yönlendirme değil, download)
+                const link = document.createElement('a');
+                link.href = FILE_BASE_PATH + fileParam;
+                link.download = fileParam;
+                document.body.appendChild(link);
+                link.click();
+            });
             
             // Sayfanın geri kalanını yükleme
-            document.write('');
-            document.close();
+            window.stop();
         }
     </script>
+    
+    <!-- Supabase JS SDK - sadece ana sayfa için -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
     <style>
         * {
@@ -420,7 +436,7 @@
     </footer>
 
     <!-- Supabase Connection Status -->
-    <div id="status-badge" class="status-badge disconnected">Baglaniyor...</div>
+    <div id="status-badge" class="status-badge disconnected">Bağlaniyor...</div>
     
     <script>
         // Bu script sadece ana sayfa için çalışır (file parametresi yoksa)
